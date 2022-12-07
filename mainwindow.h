@@ -34,6 +34,7 @@ private slots:
     void openFileDirectory();
     void openFileDirectoryLE();
     void openArchive();
+    void openOne();
 private:
     QTableWidget* tw = new QTableWidget(this);
     QString getFileSize(QImage);
@@ -46,6 +47,7 @@ private:
     QTableWidgetItem *item = new QTableWidgetItem;
     QPushButton* pbDir = new QPushButton(this);
     QPushButton* pbArch = new QPushButton(this);
+    QPushButton* pbOne = new QPushButton(this);
     QLineEdit* leDir = new QLineEdit(this);
     QStatusBar* statusbar = new QStatusBar(this);
     Ui::MainWindow *ui;

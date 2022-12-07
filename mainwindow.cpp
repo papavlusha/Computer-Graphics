@@ -7,43 +7,6 @@
 #include <qzipreader_p.h>
 #include <qzipwriter_p.h>
 
-//void MergeList(int l, int k, int r) {
-//    QTableWidgetItem* dop = new par[k - l + 1];
-//    for (int i = 0; i < k - l + 1; i++) {
-//        dop[i] = mas[l + i];
-//    }
-//    int f = 0, s = k + 1;
-//    for (int i = l; i <= r; i++) {
-//        if (f == k - l + 1) {// если первый исп то оставшиеся во втором стоят на нужных местах
-//            break;
-//        } else if (s == r + 1) {
-//            for (int j = i; j <= r; j++) {
-//                mas[j] = dop[f];
-//                f++;
-//            }
-//            break;
-//        }
-//        if (dop[f].coords_[ind] <= mas[s].coords_[ind]) {
-//            mas[i] = dop[f];
-//            f++;
-//        } else {
-//            mas[i] = mas[s];
-//            s++;
-//        }
-//    }
-
-//}
-
-void MergeSort (int l,int r) {
-    if (l != r) {
-        int k = (l + r) / 2;
-        MergeSort(l, k);
-        MergeSort(k + 1, r);
-       // MergeList(l, k, r);
-    }
-}
-
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -57,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect (this->pbDir,SIGNAL(clicked()),SLOT(openFileDirectory()));
     connect (this->pbArch,SIGNAL(clicked()),SLOT(openArchive()));
     connect (this->leDir,SIGNAL(editingFinished()),SLOT(openFileDirectoryLE()));
-
+    connect(pbOne,SIGNAL(clicked()),SLOT(openOne()));
 }
 
 MainWindow::~MainWindow()
@@ -86,10 +49,12 @@ void MainWindow::settings()
     this->pbArch->setText("Выберите архив");
     QGridLayout* box = new QGridLayout;
     box->setAlignment(Qt::AlignLeft);
-    box->addWidget(this->pbArch,0,0);
-    box->addWidget(this->pbDir,0,1);
-    box->addWidget(this->leDir,0,2);
-    box->addWidget(this->tw,1,0,1,3);
+    pbOne->setText("Выбрать картинку");
+    box->addWidget(pbOne,0,0);
+    box->addWidget(this->pbArch,0,1);
+    box->addWidget(this->pbDir,0,2);
+    box->addWidget(this->leDir,0,3);
+    box->addWidget(this->tw,1,0,1,4);
     window->setLayout(box);
 }
 
@@ -139,6 +104,42 @@ void MainWindow::openArchive()
         }
          dir.removeRecursively();
     }
+}
+
+void MainWindow::openOne() {
+    QFileDialog* dial = new QFileDialog(this);
+    QString path = dial->getOpenFileName(this,tr("Выберите файл"),"/",tr("img(*.png *.jpg *.tif *.gif *.bmp *.pcx)"));
+    QFile file(path);
+    QImage img;
+    QFileInfo inf;
+    QImageWriter g(dirPath);
+    this->leDir->setText(dirPath);
+    this->data_base.clear();
+        visual_file tmp;
+        inf.setFile(path);
+        img.load(path);
+        tmp.Name = inf.fileName();
+        tmp.Type = inf.suffix();
+        tmp.Size = getFileSize(img);
+        int q = tmp.Name.size()-1;
+        while (tmp.Name[q] != '.') {
+            q--;
+        }
+        tmp.Name.remove(q,tmp.Name.size() - q);
+        if (ceil(img.dotsPerMeterX()/39.37) - img.dotsPerMeterX()/39.37 >= 0.1) {
+            tmp.Hresolution = floor(img.dotsPerMeterX()/39.37);
+        } else {
+            tmp.Hresolution = ceil(img.dotsPerMeterX()/39.37);
+        }
+        if (ceil(img.dotsPerMeterY()/39.37) - img.dotsPerMeterY()/39.37 >= 0.1) {
+            tmp.Vresolution = floor(img.dotsPerMeterY()/39.37);
+        } else {
+            tmp.Vresolution = ceil(img.dotsPerMeterY()/39.37);
+        }
+        tmp.Depth = img.bitPlaneCount();
+        tmp.Compressing = g.compression();
+        this->data_base.push_back(tmp);
+    fillTheTable();
 }
 
 void MainWindow::fillFromDirectory(QString dirPath) {
