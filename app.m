@@ -1,7 +1,3 @@
-%%
-% 
-% $$e^{\pi i} + 1 = 0$$
-% 
 function varargout = app(varargin)
 
 % Begin initialization code - DO NOT EDIT
@@ -18,10 +14,6 @@ end
 
 if nargout
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
-    %%
-    % 
-    % $$e^{\pi i} + 1 = 0$$
-    % 
 else
     gui_mainfcn(gui_State, varargin{:});
 end
@@ -215,6 +207,122 @@ if(handles.grayScaled)
     imageObj = handles.image;
     filter = fspecial('log', 5, 0.5);
     imageProcessed = imfilter(imageObj, filter);
+    handles.imageProcessed = true;
+    axes(handles.uploadimage);
+    imshowpair(imageObj,imageProcessed,'montage');
+    title(get(hObject, 'string'));
+    guidata(hObject, handles);
+else
+    errordlg('Image is not gray scaled to perform thresholding','Failed');
+end
+
+
+% --- Executes on button press in pushbutton17.
+function pushbutton17_Callback(hObject, eventdata, handles)
+if(~handles.imageUploaded)
+    errordlg('Image to process is not uploaded.','Failed');
+   return; 
+end
+if(handles.grayScaled)
+    imageObj = handles.image;
+    B=zeros(size(imageObj));
+
+%PAD THE MATRIX A WITH ZEROS
+modifyA=padarray(imageObj,[1 1]);
+
+        x=[1:3]';
+        y=[1:3]';
+       
+for i= 1:size(modifyA,1)-2
+    for j=1:size(modifyA,2)-2
+      
+       %VECTORIZED METHOD 
+       window=reshape(modifyA(i+x-1,j+y-1),[],1);
+
+       %FIND THE MINIMUM VALUE IN THE SELECTED WINDOW
+        B(i,j)=max(window);
+
+    end
+end
+
+%CONVERT THE OUTPUT MATRIX TO 0-255 RANGE IMAGE TYPE
+imageProcessed = uint8(B);
+handles.imageProcessed = true;
+axes(handles.uploadimage);
+imshowpair(imageObj,imageProcessed,'montage');
+title(get(hObject, 'string'));
+else
+    errordlg('Image is not gray scaled to perform thresholding','Failed');
+end
+
+% --- Executes on button press in pushbutton18.
+function pushbutton18_Callback(hObject, eventdata, handles)
+if(~handles.imageUploaded)
+    errordlg('Image to process is not uploaded.','Failed');
+   return; 
+end
+if(handles.grayScaled)
+    imageObj = handles.image;
+    B=zeros(size(imageObj));
+
+%PAD THE MATRIX A WITH ZEROS
+modifyA=padarray(imageObj,[1 1]);
+
+        x=[1:3]';
+        y=[1:3]';
+       
+for i= 1:size(modifyA,1)-2
+    for j=1:size(modifyA,2)-2
+      
+       %VECTORIZED METHOD 
+       window=reshape(modifyA(i+x-1,j+y-1),[],1);
+
+       %FIND THE MINIMUM VALUE IN THE SELECTED WINDOW
+        B(i,j)=min(window);
+
+    end
+end
+
+%CONVERT THE OUTPUT MATRIX TO 0-255 RANGE IMAGE TYPE
+imageProcessed = uint8(B);
+handles.imageProcessed = true;
+axes(handles.uploadimage);
+imshowpair(imageObj,imageProcessed,'montage');
+title(get(hObject, 'string'));
+else
+    errordlg('Image is not gray scaled to perform thresholding','Failed');
+end
+
+
+% --- Executes on button press in pushbutton19.
+function pushbutton19_Callback(hObject, eventdata, handles)
+if(~handles.imageUploaded)
+    errordlg('Image to process is not uploaded.','Failed');
+   return; 
+end
+if(handles.grayScaled)
+    imageObj = handles.image;
+    filter = fspecial('average');
+    imageProcessed = imfilter(imageObj, filter);
+    handles.imageProcessed = true;
+    axes(handles.uploadimage);
+    imshowpair(imageObj,imageProcessed,'montage');
+    title(get(hObject, 'string'));
+    guidata(hObject, handles);
+else
+    errordlg('Image is not gray scaled to perform thresholding','Failed');
+end
+
+
+% --- Executes on button press in pushbutton20.
+function pushbutton20_Callback(hObject, eventdata, handles)
+if(~handles.imageUploaded)
+    errordlg('Image to process is not uploaded.','Failed');
+   return; 
+end
+if(handles.grayScaled)
+    imageObj = handles.image;
+    imageProcessed = medfilt2(imageObj);
     handles.imageProcessed = true;
     axes(handles.uploadimage);
     imshowpair(imageObj,imageProcessed,'montage');
