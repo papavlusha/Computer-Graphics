@@ -2,12 +2,12 @@
 
 This repository contains the Computer Graphics lab assignments 1-6, each implemented in a separate branch:
 
-- **lab_1**: Color Model Transformations
-- **lab_2**: Image Manipulation and Processing
-- **lab_3**: Implementation of Various Filters
-- **lab_4**: Line and Curve Drawing Methods
-- **lab_5**: Clipping Methods
-- **lab_6**: 3D Modeling
+- **[lab_1](../../tree/lab_1)**: Color Model Transformations
+- **[lab_2](../../tree/lab2)**: Image Manipulation and Processing
+- **[lab_3](../../tree/lab_3)**: Implementation of Various Filters
+- **[lab_4](../../tree/lab_4)**: Line and Curve Drawing Methods
+- **[lab_5](../../tree/lab_5)**: Clipping Methods
+- **[lab_6](../../tree/lab_6)**: 3D Modeling
 
 ## Overview
 
